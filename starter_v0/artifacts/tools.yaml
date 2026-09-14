@@ -8,27 +8,27 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng."
+    description: "Hỏi người dùng khi thiếu thông tin bắt buộc; không thực hiện helpdesk action."
     parameters:
       type: object
       properties:
         question: {type: string, default: "", description: "Câu hỏi"}
         response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời"}
-        options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
+        options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn khi response_type=choice"}
       required: [question]
 
   - name: search_kb
-    description: "Tìm hướng dẫn hỗ trợ kỹ thuật."
+    description: "Tìm hướng dẫn trong knowledge base nội bộ; không kiểm tra live service hoặc thiết bị."
     parameters:
       type: object
       properties:
         query: {type: string, default: "", description: "Nội dung cần tìm"}
         category: {type: string, enum: [all, vpn, email, wifi, printing, account, security, hardware, software, meeting_room], default: "all", description: "Nhóm hướng dẫn"}
-        top_k: {type: integer, default: 3, description: "Số kết quả"}
+        top_k: {type: integer, minimum: 1, maximum: 10, default: 3, description: "Số kết quả, từ 1 đến 10"}
       required: [query]
 
   - name: check_service_status
-    description: "Kiểm tra trạng thái một dịch vụ."
+    description: "Kiểm tra trạng thái dịch vụ dùng chung; không chẩn đoán một thiết bị."
     parameters:
       type: object
       properties:
@@ -37,7 +37,7 @@ tools:
       required: [service]
 
   - name: inspect_device
-    description: "Kiểm tra thông tin và chẩn đoán thiết bị."
+    description: "Kiểm tra một asset nội bộ; không kiểm tra trạng thái dịch vụ dùng chung."
     parameters:
       type: object
       properties:
@@ -54,14 +54,14 @@ tools:
       required: [employee_id]
 
   - name: format_incident_report
-    description: "Trình bày các kết quả đã có thành báo cáo."
+    description: "Chỉ định dạng findings đã thu thập; không gọi tool khác hoặc tạo ticket."
     parameters:
       type: object
       properties:
         findings:
           type: array
           default: []
-          description: "Các kết quả đã thu thập"
+          description: "Các kết quả đã thu thập; mỗi finding cần label và detail"
           items:
             type: object
             properties:
@@ -69,6 +69,7 @@ tools:
               detail: {type: string}
               source: {type: string}
               status: {type: string}
+            required: [label, detail]
         template: {type: string, enum: [brief, technical, handoff], default: "brief", description: "Mẫu báo cáo"}
         incident_title: {type: string, default: "IT incident", description: "Tiêu đề"}
       required: [findings, template]
@@ -82,7 +83,7 @@ tools:
         manufacturer: {type: string, description: "Hãng sản xuất công khai, ví dụ Lenovo"}
         model: {type: string, description: "Tên model công khai, ví dụ ThinkPad T14 Gen 4"}
         query_type: {type: string, enum: [specs, drivers, support, compatibility], default: "support", description: "Loại thông tin cần tìm"}
-        max_results: {type: integer, default: 3, description: "Số kết quả, tối đa 5"}
+        max_results: {type: integer, minimum: 1, maximum: 5, default: 3, description: "Số kết quả, từ 1 đến 5"}
       required: [manufacturer, model, query_type]
 
   - name: policy
@@ -92,7 +93,7 @@ tools:
       properties:
         query: {type: string, default: "", description: "Nội dung cần tìm"}
         policy_area: {type: string, enum: [all, access_control, data_privacy, external_tools, incident_response, service_operations, ticketing], default: "all", description: "Nhóm chính sách"}
-        top_k: {type: integer, default: 3, description: "Số mục"}
+        top_k: {type: integer, minimum: 1, maximum: 10, default: 3, description: "Số mục, từ 1 đến 10"}
       required: [query]
 
   - name: create_ticket

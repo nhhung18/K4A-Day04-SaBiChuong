@@ -7,6 +7,7 @@ requires_env: []
 inputs: [asset_id, check]
 outputs: [device, diagnostics]
 side_effect: false
+requires_confirmation: false
 ---
 # inspect_device
 

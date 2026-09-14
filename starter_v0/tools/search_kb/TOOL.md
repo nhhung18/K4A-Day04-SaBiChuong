@@ -7,6 +7,7 @@ requires_env: []
 inputs: [query, category, top_k]
 outputs: [results, freshness]
 side_effect: false
+requires_confirmation: false
 ---
 # search_kb
 

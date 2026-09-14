@@ -137,14 +137,14 @@ Sao chép mẫu dưới đây cho từng thành viên:
 
 ### Họ tên — MSSV
 
-- **Vai trò/phần việc được nhận:**
-- **Những gì tôi đã thay đổi trong repo chung:**
-- **File hoặc artifact liên quan:**
-- **Commit hash hoặc pull request:**
-- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:**
-- **Khó khăn tôi gặp và cách tôi xử lý:**
-- **Điều tôi học được từ phần việc này:**
-- **Nếu làm lại, tôi sẽ cải thiện điều gì:**
+- **Vai trò/phần việc được nhận:** Rà soát Tool & Schema cho TV3; tập trung vào ambiguity, enum, argument boundary và capability boundary.
+- **Những gì tôi đã thay đổi trong repo chung:** Cập nhật declaration trong `artifacts/tools.yaml`, đồng bộ `TOOL.md` của các tool read-only, thêm validation runtime cho các enum/count boundary và viết test schema/boundary.
+- **File hoặc artifact liên quan:** `artifacts/tools.yaml`, `tools/*/TOOL.md`, `tools/clarify/tool.py`, `tools/search_kb/tool.py`, `tools/check_service_status/tool.py`, `tools/inspect_device/tool.py`, `tools/format_incident_report/tool.py`, `tools/policy/tool.py`, `tests/test_tools_tv3.py`.
+- **Commit hash hoặc pull request:** 
+- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Giới hạn `top_k` và `max_results`, đồng thời reject enum không hợp lệ ở runtime để schema và hành vi thực tế không lệch nhau.
+- **Khó khăn tôi gặp và cách tôi xử lý:** sửa metadata `lookup_user` để tuân theo kind được cho phép.
+- **Điều tôi học được từ phần việc này:** Tool description không đủ để đảm bảo an toàn; cần kiểm tra đồng thời declaration, implementation, capability boundary và test.
+- **Nếu làm lại, tôi sẽ cải thiện điều gì:** Chạy full eval Phase B sớm hơn .
 
 Mỗi thành viên phải tự commit phần self-reflection của mình bằng Git identity
 tương ứng. Reflection phải dẫn đến contribution artifact/commit đã nêu ở trên,

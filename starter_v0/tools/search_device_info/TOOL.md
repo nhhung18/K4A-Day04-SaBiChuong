@@ -7,6 +7,7 @@ requires_env: [TAVILY_API_KEY]
 inputs: [manufacturer, model, query_type, max_results]
 outputs: [items, query, official_domains, external_data_notice]
 side_effect: false
+requires_confirmation: false
 ---
 # search_device_info
 

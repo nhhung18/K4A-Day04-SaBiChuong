@@ -11,6 +11,8 @@ ASSET_FILE = ROOT / "helpdesk_data" / "assets.json"
 
 def inspect_device(asset_id: str = "", check: str = "all") -> dict[str, Any]:
     try:
+        if (check or "all").strip().lower() not in {"all", "network", "vpn", "security", "hardware", "software"}:
+            return {"tool": "inspect_device", "error": "invalid_check", "check": check}
         data = json.loads(ASSET_FILE.read_text(encoding="utf-8"))
         wanted_id = (asset_id or "").strip().upper()
         wanted_check = (check or "all").strip().lower()

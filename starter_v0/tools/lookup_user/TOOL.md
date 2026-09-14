@@ -1,12 +1,13 @@
 ---
 name: lookup_user
 track: core
-kind: local_directory
+kind: local_knowledge
 provider: mock_employee_directory
 requires_env: []
 inputs: [employee_id]
 outputs: [employee, assigned_assets]
 side_effect: false
+requires_confirmation: false
 ---
 # lookup_user
 

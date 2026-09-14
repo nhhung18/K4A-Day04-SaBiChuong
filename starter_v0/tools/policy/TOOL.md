@@ -7,6 +7,7 @@ requires_env: []
 inputs: [query, policy_area, top_k]
 outputs: [results, freshness, trust_boundary]
 side_effect: false
+requires_confirmation: false
 ---
 # policy
 
