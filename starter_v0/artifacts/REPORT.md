@@ -6,6 +6,19 @@
 - Members:
 - Provider/model:
 
+## Phân công nhiệm vụ — TV1: Baseline, Integration & QA
+
+- Chạy baseline `v0`, kiểm tra môi trường và xác nhận các tool hoạt động trước
+      khi đánh giá.
+- Sau khi các thành viên khác push thay đổi, thực hiện pull/merge và chạy lại
+      các bộ test để so sánh kết quả với baseline.
+- Kiểm tra tool call, arguments, provider/tool errors và các regression phát
+      sinh sau khi tích hợp.
+- Thực hiện kiểm thử tích hợp, tập trung vào các case multi-turn và
+      security/adversarial.
+- Tổng hợp metrics, transcript/run và các evidence cần thiết cho report và
+      demo.
+
 # PHẦN A — Giới thiệu agent
 
 ## A1. Agent này làm được gì
