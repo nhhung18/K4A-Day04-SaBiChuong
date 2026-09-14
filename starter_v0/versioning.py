@@ -25,6 +25,7 @@ def build_artifact_version(version: str, system_prompt_path: Path, tools_path: P
     prompt_hash = file_hash(system_prompt_path)
     tools_hash = file_hash(tools_path)
     artifact_version = f"{version}+p{short_hash(prompt_hash)}+t{short_hash(tools_hash)}"
+    # artifact_version = "v1+p<12-char-prompt-hash>+t<12-char-tools-hash>"
     return ArtifactVersion(
         version=version,
         artifact_version=artifact_version,

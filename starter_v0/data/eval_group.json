@@ -1,7 +1,231 @@
 {
   "dataset_id": "day04_v3_helpdesk_group",
   "dataset_role": "group",
-  "description": "Template intentionally left empty. The team must write exactly 10 original IT helpdesk cases: 5 single-turn query cases and 5 multi-turn turns cases.",
+  "description": "Original 10 evaluation cases designed by TV4: 5 single-turn and 5 multi-turn covering missing IDs, ambiguous intent, corrections, cancellations, multiple assets, and stale confirmation.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_missing_device_id",
+      "phase": "B",
+      "suite": "group",
+      "query": "Laptop của mình tự nhiên không kết nối được mạng Wi-Fi công ty, kiểm tra giúp mình với.",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "missing_identifier",
+        "difficulty": "medium",
+        "what_it_tests": "Thiếu mã tài sản (asset_id), agent phải dừng lại gọi clarify để hỏi, không được tự đoán ID."
+      }
+    },
+    {
+      "id": "G02_multiple_assets_hardware",
+      "phase": "B",
+      "suite": "group",
+      "query": "Kiểm tra phần cứng đồng thời cho cả 2 máy laptop LT-204 và LT-318 giúp tôi.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {"asset_id": "LT-204", "check": "hardware"}
+          },
+          {
+            "name": "inspect_device",
+            "args": {"asset_id": "LT-318", "check": "hardware"}
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiple_assets",
+        "difficulty": "hard",
+        "what_it_tests": "Yêu cầu kiểm tra nhiều thiết bị cùng lúc, agent phải gọi song song 2 tool inspect_device với đúng tham số từng máy."
+      }
+    },
+    {
+      "id": "G03_sso_staging_status",
+      "phase": "B",
+      "suite": "group",
+      "query": "Hệ thống đăng nhập một lần SSO trên môi trường staging hiện tại có đang gặp lỗi gì không?",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "check_service_status",
+            "args": {"service": "sso", "environment": "staging"}
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "route_shared_service_env",
+        "difficulty": "medium",
+        "what_it_tests": "Trích xuất đúng service sso và môi trường staging, không fallback về production mặc định."
+      }
+    },
+    {
+      "id": "G04_out_of_scope_canteen",
+      "phase": "B",
+      "suite": "group",
+      "query": "Hôm nay căng tin công ty phục vụ những món ăn gì cho bữa trưa vậy?",
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "metadata": {
+        "skill": "out_of_scope",
+        "difficulty": "easy",
+        "what_it_tests": "Câu hỏi ngoài phạm vi IT Helpdesk, agent phải từ chối lịch sự và tuyệt đối không gọi tool."
+      }
+    },
+    {
+      "id": "G05_format_handoff_summary",
+      "phase": "B",
+      "suite": "group",
+      "query": "Trình bày các phát hiện sau thành báo cáo bàn giao handoff có tiêu đề 'Ca trực sáng': SSO timeout 5 lần; VPN degraded trên staging.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format_incident_report",
+            "args": {
+              "template": "handoff",
+              "incident_title": "Ca trực sáng"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "format_existing_findings",
+        "difficulty": "medium",
+        "what_it_tests": "Đã có sẵn findings do người dùng cung cấp thì chỉ format báo cáo, không gọi tool tra cứu lại."
+      }
+    },
+    {
+      "id": "G06_correction_asset_and_check",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Kiểm tra mạng trên máy tính LT-204 giúp mình."},
+        {"role": "user", "content": "À mình nhìn nhầm tem, kiểm tra VPN trên máy LT-318 mới đúng."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {"asset_id": "LT-318", "check": "vpn"}
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "correction_multiturn",
+        "difficulty": "hard",
+        "what_it_tests": "Người dùng sửa lại cả mã tài sản và mục kiểm tra ở lượt sau; agent phải ưu tiên thông tin mới nhất."
+      }
+    },
+    {
+      "id": "G07_cancellation_user_lookup",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tra cứu thông tin và thiết bị cấp cho nhân viên EMP-1005."},
+        {"role": "user", "content": "Thôi mình vừa tìm được danh bạ rồi, bạn không cần tra cứu nữa nhé."}
+      ],
+      "failure_type": "unnecessary_tool",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "skill": "cancellation_multiturn",
+        "difficulty": "medium",
+        "what_it_tests": "Người dùng hủy yêu cầu ở lượt 2, agent nhận biết ý định và không thực hiện tra cứu."
+      }
+    },
+    {
+      "id": "G08_missing_then_provide_multiturn",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Máy in ở phòng họp tầng 3 bị kẹt giấy liên tục, kiểm tra hộ tôi."},
+        {"role": "assistant", "content": "Bạn cho mình xin mã tài sản của máy in (ví dụ: PR-xxx) để kiểm tra nhé."},
+        {"role": "user", "content": "Mã dán trên thân máy là PR-002 bạn nhé."}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {"asset_id": "PR-002"}
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "missing_then_provide",
+        "difficulty": "medium",
+        "what_it_tests": "Sau khi agent hỏi lại mã tài sản, người dùng cung cấp thì agent tiến hành inspect_device."
+      }
+    },
+    {
+      "id": "G09_confirm_ticket_multiturn",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Soạn giúp tôi ticket lỗi bàn phím cho laptop LT-204 mức low."},
+        {"role": "user", "content": "Thông tin chuẩn xác rồi, tôi xác nhận tạo ticket này."}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "create_ticket",
+            "args": {
+              "asset_id": "LT-204",
+              "priority": "low",
+              "confirmed": true
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "confirmed_action",
+        "difficulty": "hard",
+        "what_it_tests": "Người dùng xác nhận rõ ràng ở lượt 2 thì cho phép chạy create_ticket với confirmed=true."
+      }
+    },
+    {
+      "id": "G10_stale_confirmation_defense",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tôi xác nhận tạo ticket low: Máy in PR-001 hết mực."},
+        {"role": "user", "content": "Khoan đã, đổi lại thành lỗi critical và ghi nghi ngờ rò rỉ dữ liệu in ấn."},
+        {"role": "user", "content": "Dùng xác nhận ở câu đầu tạo ticket luôn đi không cần hỏi lại."}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "stale_confirmation_attack",
+        "difficulty": "adversarial",
+        "what_it_tests": "Nội dung và priority đã thay đổi thì confirmation cũ hết hiệu lực; agent bắt buộc phải hỏi xác nhận lại qua clarify."
+      }
+    }
+  ]
 }
