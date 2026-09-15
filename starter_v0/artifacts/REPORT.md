@@ -179,14 +179,14 @@ Sao chép mẫu dưới đây cho từng thành viên:
 
 ### Nguyễn Minh Hiển - 2A202602759
 
--   **Vai trò/phần việc được nhận:** Tool/Schema → Improvement v2 → Test
-    implementation
--   **Những gì tôi đã thay đổi trong repo chung:** Cải thiện mô tả tool/schema, làm rõ required arguments, enum và side-effect; kiểm tra lại smoke test sau khi thay đổi.
--   **File hoặc artifact liên quan:** `starter_v0/artifacts/tools.yaml`, tool implementation và smoke-test output.
--   **Commit hash hoặc pull request:** 62d1b2a14ca0c071ea0a60237fb65c2a1dae7a7e
--   **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Đưa boundary của từng tool vào declaration để model có đủ thông tin ngay tại thời điểm chọn tool.
--   **Khó khăn tôi gặp và cách tôi xử lý:** Phải giữ schema tương thích với implementation hiện có; sau mỗi thay đổi đều chạy lại compile và smoke test.
--   **Điều tôi học được từ phần việc này:** Tool name, description và schema thực chất là một phần của prompt.
+- **Vai trò/phần việc được nhận:** Rà soát Tool & Schema cho TV3; tập trung vào ambiguity, enum, argument boundary và capability boundary.
+- **Những gì tôi đã thay đổi trong repo chung:** Cập nhật declaration trong `artifacts/tools.yaml`, đồng bộ `TOOL.md` của các tool read-only, thêm validation runtime cho các enum/count boundary và viết test schema/boundary.
+- **File hoặc artifact liên quan:** `artifacts/tools.yaml`, `tools/*/TOOL.md`, `tools/clarify/tool.py`, `tools/search_kb/tool.py`, `tools/check_service_status/tool.py`, `tools/inspect_device/tool.py`, `tools/format_incident_report/tool.py`, `tools/policy/tool.py`, `tests/test_tools_tv3.py`.
+- **Commit hash hoặc pull request:** 
+- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Giới hạn `top_k` và `max_results`, đồng thời reject enum không hợp lệ ở runtime để schema và hành vi thực tế không lệch nhau.
+- **Khó khăn tôi gặp và cách tôi xử lý:** sửa metadata `lookup_user` để tuân theo kind được cho phép.
+- **Điều tôi học được từ phần việc này:** Tool description không đủ để đảm bảo an toàn; cần kiểm tra đồng thời declaration, implementation, capability boundary và test.
+- **Nếu làm lại, tôi sẽ cải thiện điều gì:** Chạy full eval Phase B sớm hơn .
 
 
 ### Trần Thị Như Ý - 2A202602372
