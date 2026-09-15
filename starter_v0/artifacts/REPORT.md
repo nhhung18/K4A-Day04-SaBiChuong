@@ -222,7 +222,7 @@ Sao chép mẫu dưới đây cho từng thành viên:
     (tiếng Anh lẫn tiếng Việt) và kiểm tra kỹ hơn cơ chế không để lộ
     thông tin định danh nội bộ ra external web search.
 
-### Đào Thanh Trường - 2A202602386
+### Đào Thanh Trường - 2A202602683
 
 -   **Vai trò/phần việc được nhận:** UI & Evidence --- theo dõi kết quả
 -   **Những gì tôi đã thay đổi trong repo chung:** Xây `ui.py`
