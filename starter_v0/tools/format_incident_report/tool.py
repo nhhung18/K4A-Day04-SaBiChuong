@@ -15,6 +15,10 @@ def format_incident_report(
     incident_title: str = "IT incident",
 ) -> dict[str, Any]:
     findings = findings or []
+    if template not in {"brief", "technical", "handoff"}:
+        return {"tool": "format_incident_report", "error": "invalid_template", "template": template}
+    if any(not isinstance(item, dict) or not str(item.get("label") or "").strip() or not str(item.get("detail") or "").strip() for item in findings):
+        return {"tool": "format_incident_report", "error": "invalid_finding"}
     lines = [_line(item) for item in findings]
     if template == "technical":
         markdown = "\n".join([f"# {incident_title}", "", "## Diagnostic findings", *lines, "", "## Next step", "- Validate the evidence and assign an owner."])

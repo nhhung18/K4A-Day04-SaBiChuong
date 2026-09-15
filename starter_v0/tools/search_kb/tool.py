@@ -40,8 +40,13 @@ def _split_trusted_content(body: str) -> tuple[str, list[str]]:
 
 def search_kb(query: str = "", category: str = "all", top_k: int = 3) -> dict[str, Any]:
     try:
+        allowed_categories = {"all", "vpn", "email", "wifi", "printing", "account", "security", "hardware", "software", "meeting_room"}
         query_terms = terms(query)
         wanted_category = (category or "all").strip().lower()
+        if wanted_category not in allowed_categories:
+            return {"tool": "search_kb", "error": "invalid_category", "category": wanted_category}
+        if not isinstance(top_k, int) or isinstance(top_k, bool) or not 1 <= top_k <= 10:
+            return {"tool": "search_kb", "error": "invalid_top_k", "top_k": top_k}
         hits: list[dict[str, Any]] = []
         for path in sorted(KB_DIR.glob("*.md")):
             meta, body = _load_doc(path)

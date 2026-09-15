@@ -7,6 +7,7 @@ requires_env: []
 inputs: [service, environment]
 outputs: [service, environment, status, incident]
 side_effect: false
+requires_confirmation: false
 ---
 # check_service_status
 
