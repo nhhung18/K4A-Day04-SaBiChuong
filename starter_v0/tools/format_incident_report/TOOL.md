@@ -6,6 +6,7 @@ requires_env: []
 inputs: [findings, template, incident_title]
 outputs: [markdown, finding_count]
 side_effect: false
+requires_confirmation: false
 ---
 # format_incident_report
 

@@ -11,6 +11,10 @@ STATUS_FILE = ROOT / "helpdesk_data" / "service_status.json"
 
 def check_service_status(service: str = "", environment: str = "production") -> dict[str, Any]:
     try:
+        if (service or "").strip().lower() not in {"vpn", "email", "sso", "wifi", "printing"}:
+            return {"tool": "check_service_status", "error": "invalid_service", "service": service}
+        if (environment or "production").strip().lower() not in {"production", "staging"}:
+            return {"tool": "check_service_status", "error": "invalid_environment", "environment": environment}
         data = json.loads(STATUS_FILE.read_text(encoding="utf-8"))
         service_key = (service or "").strip().lower()
         environment_key = (environment or "production").strip().lower()

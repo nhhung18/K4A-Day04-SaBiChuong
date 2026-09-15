@@ -59,6 +59,11 @@ def _split_trusted_facts(section_text: str) -> tuple[str, list[str]]:
 
 def search_company_policy(query: str = "", policy_area: str = "all", top_k: int = 3) -> dict[str, Any]:
     try:
+        policy_area = (policy_area or "all").strip().lower()
+        if policy_area not in {"all", "access_control", "data_privacy", "external_tools", "incident_response", "service_operations", "ticketing"}:
+            return {"tool": "search_company_policy", "error": "invalid_policy_area", "policy_area": policy_area}
+        if not isinstance(top_k, int) or isinstance(top_k, bool) or not 1 <= top_k <= 10:
+            return {"tool": "search_company_policy", "error": "invalid_top_k", "top_k": top_k}
         query_terms = terms(query)
         if not query_terms:
             return {"tool": "search_company_policy", "query": query, "policy_area": policy_area, "results": []}

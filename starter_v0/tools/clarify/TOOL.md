@@ -6,6 +6,7 @@ requires_env: []
 inputs: [question, response_type, options]
 outputs: [question, response_type, options, awaiting_user]
 side_effect: false
+requires_confirmation: false
 ---
 # clarify
 
